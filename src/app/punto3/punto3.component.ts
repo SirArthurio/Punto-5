@@ -1,6 +1,6 @@
 import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
 
 @Component({
@@ -23,35 +23,35 @@ export class Punto3Component {
   };
 
   tiposProduccion = [
-    { nombre: 'Artículos A1', puntos: 15, cantidad: 0, limite: 15 },
-    { nombre: 'Artículos A2', puntos: 12, cantidad: 0, limite: 12 },
-    { nombre: 'Artículos B', puntos: 8, cantidad: 0, limite: 15 },
-    { nombre: 'Artículos C', puntos: 3, cantidad: 0, limite: 15 },
+    { nombre: 'Artículos A1', puntos: 15, limite: 15 },
+    { nombre: 'Artículos A2', puntos: 12, limite: 12 },
+    { nombre: 'Artículos B', puntos: 8, limite: 15 },
+    { nombre: 'Artículos C', puntos: 3, limite: 15 },
     { nombre: 'Artículo en revista indexada', puntos: 5, limite: 50 },
-    { nombre: 'Producción de video nacioanl', puntos: 7, limite: 35 },
-    { nombre: 'Producción de video inter-nacional', puntos: 12, limite: 60 },
-    { nombre: 'Patente', puntos: 10, limite: 100 },
-    { nombre: 'Libro de texto', puntos: 8, limite: 80 },
-    { nombre: 'Libro de investigación', puntos: 12, limite: 120 },
+    { nombre: 'Producción de video nacional', puntos: 7, limite: 35, maxProductos: 5 },
+    { nombre: 'Producción de video internacional', puntos: 12, limite: 60, maxProductos: 5 },
+    { nombre: 'Patente', puntos: 25, limite: 100 },
+    { nombre: 'Libro de texto', puntos: 15, limite: 80 },
+    { nombre: 'Libro de investigación', puntos: 20, limite: 120 },
     { nombre: 'Premio nacional', puntos: 15, limite: 150 },
     { nombre: 'Premio internacional', puntos: 20, limite: 200 },
-    { nombre: 'Traducción de libros', puntos: 4, limite: 40 },
-    { nombre: 'Obra artística', puntos: 6, limite: 60 },
-    { nombre: 'Producción técnica', puntos: 7, limite: 70 },
-    { nombre: 'Producción de software', puntos: 9, limite: 90 },
+    { nombre: 'Traducción de libros', puntos: 15, limite: 40 },
+    { nombre: 'Obra artística internacional', puntos: 20, limite: 60 },
+    { nombre: 'Obra artística nacional', puntos: 14, limite: 60 },
+    { nombre: 'Producción técnica', puntos: 15, limite: 70 },
+    { nombre: 'Producción de software', puntos: 15, limite: 90 }
   ];
 
   constructor(private fb: FormBuilder) {
     this.salarioForm = this.fb.group({
       gradoAcademico: ['', Validators.required],
       categoria: ['', Validators.required],
+      numAutores:[0,[Validators.min(0)]],
       experienciaDocente: [0, Validators.required],
       experienciaNoDocente: [0, Validators.required],
       experienciaDireccion: [0, Validators.required],
       experienciaInvestigacion: [0, Validators.required],
       añosEspecializacion: [0, [Validators.min(0)]],
-      añosDoctorado: [0, [Validators.min(0)]],
-      añosMaestria: [0, [Validators.min(0)]],
       numEspecializaciones: [0, [Validators.min(0), Validators.max(2)]],
       numMaestrias: [0, [Validators.min(0), Validators.max(2)]],
       numDoctorados: [0, [Validators.min(0), Validators.max(2)]],
@@ -67,8 +67,6 @@ export class Punto3Component {
       gradoAcademico,
       categoria,
       añosEspecializacion,
-      añosMaestria,
-      añosDoctorado,
       numEspecializaciones,
       numMaestrias,
       numDoctorados,
@@ -78,21 +76,17 @@ export class Punto3Component {
       experienciaInvestigacion,
     } = this.salarioForm.value;
 
-    const añosEspecializacionNum = Number(añosEspecializacion) || 0;
-    const añosMaestriaNum = Number(añosMaestria) || 0;
-    const añosDoctoradoNum = Number(añosDoctorado) || 0;
-
-    const tieneMaestria = gradoAcademico === 'Maestría' || añosMaestriaNum > 0;
-    const tieneDoctorado =
-      gradoAcademico === 'Doctorado' || añosDoctoradoNum > 0;
+const añosEspecializacionNum = Number(añosEspecializacion) || 0;
+let esEspecializacionClinica=false
+    
 
     let puntosTitulo = this.obtenerPuntosPorTitulo(
       gradoAcademico,
-      tieneMaestria,
-      tieneDoctorado,
+      numEspecializaciones,
       añosEspecializacionNum,
-      añosMaestriaNum,
-      añosDoctoradoNum
+      esEspecializacionClinica,
+      numMaestrias,
+      numDoctorados,
     );
 
     let puntosCategoria = this.obtenerPuntosPorCategoria(categoria);
@@ -100,9 +94,14 @@ export class Punto3Component {
       experienciaDocente,
       experienciaInvestigacion,
       experienciaNoDocente,
-      experienciaDireccion
+      experienciaDireccion,categoria
     );
-    let puntosProductividad = this.calcularPuntosProductividad();
+    let puntosProductividad = this.calcularPuntosProductividad(
+      this.salarioForm.value.produccionAcademica,
+      this.salarioForm.value.numAutores, 
+      categoria
+    );
+    
 
     let totalPuntos =
       puntosTitulo + puntosCategoria + puntosExperiencia + puntosProductividad;
@@ -116,9 +115,7 @@ export class Punto3Component {
         value: this.salarioTotal!,
       },
     ];
-    const puntosProd = this.calcularPuntosProductividad();
-    console.log('🔹 Puntos Productividad:', puntosProd);
-    console.log('🔹 Tipos Producción:', this.tiposProduccion);
+   
 
     console.log('--- Cálculo de Salario ---');
     console.log(`🎓 Puntos por Título Académico: ${puntosTitulo}`);
@@ -130,11 +127,9 @@ export class Punto3Component {
     this.formatearDatos();
   }
   actualizarCantidad(index: number, event: any) {
-    this.tiposProduccion[index].cantidad = +event.target.value;
-    console.log(
-      '🔹 Nueva Cantidad en Producción Académica:',
-      this.tiposProduccion
-    );
+    const cantidad = +event.target.value || 0;
+    (this.salarioForm.get('produccionAcademica') as FormArray).at(index).setValue(cantidad);
+    console.log('🔹 Nueva Cantidad en Producción Académica:', this.salarioForm.value);
   }
 
   esPosgrado(): boolean {
@@ -144,12 +139,11 @@ export class Punto3Component {
 
    obtenerPuntosPorTitulo(
     gradoAcademico: string,
-    tieneMaestria: boolean,
-    tieneDoctorado: boolean,
+    numEspecializaciones: number,
     añosEspecializacion: number,
-    añosMaestria: number,
-    añosDoctorado: number,
-    esEspecializacionClinica: boolean = false
+    esEspecializacionClinica: boolean = false,
+    numMaestrias: number,
+    numDoctorados: number
   ): number {
     let puntosPregrado = 0;
     let puntosPosgrado = 0;
@@ -160,48 +154,61 @@ export class Punto3Component {
       puntosPregrado = 178;
     }
 
-    if (tieneDoctorado) {
-      if (!tieneMaestria) {
-        puntosPosgrado += añosDoctorado >= 3 ? 120 : 80; 
+    if (numDoctorados > 0) {
+      if (numDoctorados === 1 && numMaestrias === 0) {
+        puntosPosgrado += 120;
       } else {
-        puntosPosgrado += añosDoctorado >= 3 ? 80 : 80; 
+        puntosPosgrado += Math.min(120, numDoctorados * 80);
+      }
+      if (numDoctorados === 2 && numMaestrias === 0) {
+        puntosPosgrado = 140; 
       }
     }
   
-    if (tieneMaestria) {
-      puntosPosgrado += añosMaestria >= 2 ? 40 : 40;
+    
+    if (numMaestrias > 0) {
+      if (numMaestrias === 1) {
+        puntosPosgrado += 40;
+      } else {
+        puntosPosgrado += 60; 
+      }
     }
-
-    if (tieneMaestria && añosMaestria >= 2) {
-      puntosPosgrado = Math.min(puntosPosgrado, 60);
-    }
-
-    if (añosEspecializacion > 0) {
+  
+ 
+    if (numEspecializaciones > 0) {
       if (esEspecializacionClinica) {
         puntosPosgrado += Math.min(75, añosEspecializacion * 15);
       } else {
-        puntosPosgrado += Math.min(30, añosEspecializacion > 2 ? 20 + (añosEspecializacion - 2) * 10 : 20);
+        let puntosEspecializacion = 0;
+        let añosTotales = Math.min(numEspecializaciones, 2) * añosEspecializacion;
+        if (añosTotales <= 2) {
+          puntosEspecializacion = 20;
+        } else {
+          puntosEspecializacion = 20 + (añosTotales - 2) * 10;
+        }
+        puntosPosgrado += Math.min(30, puntosEspecializacion);
       }
     }
-
+  
+  
     puntosPosgrado = Math.min(puntosPosgrado, 140);
-
     return puntosPregrado + puntosPosgrado;
   }
+  
+  
   
 
   obtenerPuntosPorCategoria(categoria: string): number {
     const puntosPorCategoria: Record<string, { base: number; max: number }> = {
-      Auxiliar: { base: 37, max: 75 },
-      Asistente: { base: 58, max: 150 },
-      Asociado: { base: 74, max: 250 },
-      Titular: { base: 96, max: 400 },
+      Auxiliar: { base: 37, max: 37 },
+      Asistente: { base: 58, max: 58 },
+      Asociado: { base: 74, max: 74 },
+      Titular: { base: 96, max: 96 },
     };
 
     if (!puntosPorCategoria[categoria]) return 0;
 
     return Math.min(
-      puntosPorCategoria[categoria].max,
       puntosPorCategoria[categoria].base
     );
   }
@@ -210,30 +217,57 @@ export class Punto3Component {
     experienciaDocente: number = 0,
     experienciaInvestigacion: number = 0,
     experienciaNoDocente: number = 0,
-    experienciaDireccion: number = 0
+    experienciaDireccion: number = 0,
+    categoriaDocente: "Auxiliar" | "Asistente" | "Asociado" | "Titular"
   ): number {
-    const puntosDocente = Math.min(experienciaDocente * 6, 90);
+    const puntosDocente = Math.min(experienciaDocente * 4, 90);
     const puntosInvestigacion = Math.min(experienciaInvestigacion * 6, 90);
     const puntosDireccion = Math.min(experienciaDireccion * 4, 60);
     const puntosNoDocente = Math.min(experienciaNoDocente * 3, 30);
-
-    return (
-      puntosDocente + puntosInvestigacion + puntosDireccion + puntosNoDocente
-    );
+  
+    let totalPuntos = puntosDocente + puntosInvestigacion + puntosDireccion + puntosNoDocente;
+  
+    
+    const limitePorCategoria = {
+      Auxiliar: 20,
+      Asistente: 45,
+      Asociado: 90,
+      Titular: 120
+    };
+  
+    return Math.min(totalPuntos, limitePorCategoria[categoriaDocente]);
   }
+  
 
-  calcularPuntosProductividad(): number {
-    const produccionArray = this.salarioForm.get('produccionAcademica')?.value;
-
-    if (!produccionArray) return 0;
+  calcularPuntosProductividad(produccionAcademica: number[], numAutores: number, categoria: string): number {
+    if (!produccionAcademica) return 0;
 
     let totalPuntos = 0;
+    const topePorCategoria: Record<string, number> = {
+      'Auxiliar': 80,
+      'Asistente': 160,
+      'Asociado': 320,
+      'Titular': 540
+    };
 
     this.tiposProduccion.forEach((tipo, index) => {
-      let cantidad = Number(produccionArray[index]) || 0;
+      let cantidad = Number(produccionAcademica[index]) || 0;
+      
+
+      if (tipo.maxProductos && cantidad > tipo.maxProductos) {
+        cantidad = tipo.maxProductos;
+      }
+      
       let puntos = cantidad * tipo.puntos;
 
-    
+  
+      if (numAutores >= 4 && numAutores <= 5) {
+        puntos /= 2;
+      } else if (numAutores >= 6) {
+        puntos /= Math.ceil(numAutores / 2);
+      }
+
+   
       if (tipo.limite && puntos > tipo.limite) {
         puntos = tipo.limite;
       }
@@ -241,15 +275,28 @@ export class Punto3Component {
       totalPuntos += puntos;
     });
 
-    return totalPuntos;
+    const tope = topePorCategoria[categoria] || 0;
+    return Math.min(totalPuntos, tope);
+  }
+
+  trackByIndex(index: number): number {
+    return index;
   }
 
   formatearDatos() {
     this.salarioForm.reset({
-  
-      
+      gradoAcademico: '',
+      categoria: '',
+      experienciaDocente: 0,
+      experienciaNoDocente: 0,
+      experienciaDireccion: 0,
+      experienciaInvestigacion: 0,
+      añosEspecializacion: 0,
+      numEspecializaciones: 0,
+      numMaestrias: 0,
+      numDoctorados: 0,
+      produccionAcademica: this.tiposProduccion.map(() => 0)
     });
-
-
   }
+  
 }

@@ -66,17 +66,7 @@
               max="2"
             />
           </div>
-          <div>
-            <label class="block font-semibold text-gray-700"
-              >Años Totales de Maestría:</label
-            >
-            <input
-              type="number"
-              formControlName="añosMaestria"
-              class="w-full p-2 border rounded transition-transform duration-300 hover:scale-105"
-              min="0"
-            />
-          </div>
+    
         </div>
   
         <!-- Doctorado -->
@@ -91,17 +81,6 @@
               class="w-full p-2 border rounded transition-transform duration-300 hover:scale-105"
               min="0"
               max="2"
-            />
-          </div>
-          <div>
-            <label class="block font-semibold text-gray-700"
-              >Años Totales de Doctorado:</label
-            >
-            <input
-              type="number"
-              formControlName="añosDoctorado"
-              class="w-full p-2 border rounded transition-transform duration-300 hover:scale-105"
-              min="0"
             />
           </div>
         </div>
@@ -165,8 +144,21 @@
           min="0"
         />
       </div>
-      <div class="mt-6 p-4 bg-gray-100 rounded-lg col-span-2 ">
+      <div class="mt-6 p-4 bg-gray-100 rounded-lg col-span-2">
         <h2 class="text-lg font-bold text-gray-800">Productividad Académica</h2>
+
+        <!-- Campo para el número de autores -->
+        <div class="mb-4">
+          <label class="block font-semibold text-gray-700">Número de Autores:</label>
+          <input
+            type="number"
+            formControlName="numAutores"
+            min="1"
+            class="w-full p-2 border rounded transition-transform duration-300 hover:scale-105"
+          />
+        </div>
+      
+        <!-- Lista de producción académica -->
         <div class="gap-4">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4" formArrayName="produccionAcademica">
             <div *ngFor="let item of tiposProduccion; let i = index">
@@ -179,9 +171,9 @@
               />
             </div>
           </div>
-          
         </div>
       </div>
+      
     </form>
   
     <button
