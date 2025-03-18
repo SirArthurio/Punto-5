@@ -1,0 +1,13 @@
+<mat-toolbar *ngIf="!isInicio()" class="navbar rounded-md p-4 m-2">
+    <div class="logo">
+      <mat-icon>school</mat-icon>
+      <span>Simulador de Salario</span>
+    </div>
+
+    <span class="flex-grow"></span>
+
+    <button mat-button routerLink="/" class="nav-btn">
+      <mat-icon>home</mat-icon> Inicio
+    </button>
+ 
+  </mat-toolbar>

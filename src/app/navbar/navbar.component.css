@@ -1,0 +1,31 @@
+ .navbar {
+    background: linear-gradient(to right, #008000, #006400); /* Verde Unicesar */
+    color: white;
+    padding: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.3rem;
+    font-weight: bold;
+  }
+
+  .nav-btn {
+    color: white;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: transform 0.3s ease, background 0.3s;
+  }
+
+  .nav-btn:hover {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+  }
+
+  .flex-grow {
+    flex-grow: 1;
+  }

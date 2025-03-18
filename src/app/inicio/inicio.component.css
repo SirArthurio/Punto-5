@@ -1,0 +1,92 @@
+.inicioPage {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #f4f4f4;
+    text-align: center;
+  }
+  
+  .header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .logo {
+    width: 80px;
+    margin-bottom: 10px;
+  }
+  
+  .title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e5b1e;
+  }
+  
+  .container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .card-link {
+    text-decoration: none;
+  }
+  
+  .card {
+    width: 300px;
+    height: 230px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  .image-container {
+    overflow: hidden;
+    border-radius: 10px;
+  }
+  
+  .image {
+    width: 100%;
+    height: auto;
+    transition: filter 0.5s ease, transform 0.5s ease;
+    filter: grayscale(100%);
+  }
+  
+  .card:hover .image {
+    filter: grayscale(0%);
+    transform: scale(1.05);
+  }
+  
+  /* ✨ Nuevo estilo para mejorar la legibilidad ✨ */
+  .card-title {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 20px; /* Más grande */
+    font-weight: 800; /* Más grueso */
+    text-align: center;
+    width: 90%;
+    background: rgba(0, 0, 0, 0.6); /* Fondo semitransparente */
+    padding: 10px 15px;
+    border-radius: 8px;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    transition: background 0.3s ease;
+  }
+  
+  .card:hover .card-title {
+    background: rgba(0, 0, 0, 0.8); /* Más oscuro al pasar el mouse */
+  }
+  

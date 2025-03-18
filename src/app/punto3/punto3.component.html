@@ -1,0 +1,215 @@
+
+<div class="container mx-auto p-6 bg-white shadow-lg rounded-lg">
+    <div class="flex items-center justify-center gap-4 mb-6 animate-fade-in">
+      <img src="https://ant.unicesar.edu.co/chat/var/storagetheme/2016y/05/14/2/0bd7e7559a1ac1bf1c482c091da6f4fb.png" alt="Logo Unicesar" class="w-12 h-12 md:w-16 md:h-16">
+      <h1 class="text-2xl font-bold text-gray-800 text-center">
+        Simulador de Salario Docente Planta
+      </h1>
+    </div>
+  
+    <form [formGroup]="salarioForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label class="block font-semibold text-gray-700">Grado Académico:</label>
+        <select
+          formControlName="gradoAcademico"
+          class="w-full p-2 border rounded transition-transform duration-300 hover:scale-105  "
+        >
+          <option value="">Seleccione...</option>
+          <option value="Pregrado">Pregrado</option>
+          <option value="Pregrado en Medicina o Composición Musical">
+            Pregrado en Medicina o Composición Musical
+          </option>
+          <option value="Postgrado">Postgrado</option>
+        </select>
+      </div>
+  
+      <div class="md:col-span-2 mt-4" *ngIf="esPosgrado()">
+        <h2 class="text-lg font-bold text-gray-800">Títulos de Posgrado</h2>
+  
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-semibold text-gray-700"
+              >Número de Especializaciones:</label
+            >
+            <input
+              type="number"
+              formControlName="numEspecializaciones"
+              class="w-full p-2 border rounded transition-transform duration-300 hover:scale-105"
+              min="0"
+              max="2"
+            />
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700"
+              >Años Totales de Especialización:</label
+            >
+            <input
+              type="number"
+              formControlName="añosEspecializacion"
+              class="w-full p-2 border rounded transition-transform duration-300 hover:scale-105"
+              min="0"
+            />
+          </div>
+        </div>
+  
+        <!-- Maestría -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <div>
+            <label class="block font-semibold text-gray-700"
+              >Número de Maestrías:</label
+            >
+            <input
+              type="number"
+              formControlName="numMaestrias"
+              class="w-full p-2 border rounded transition-transform duration-300 hover:scale-105"
+              min="0"
+              max="2"
+            />
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700"
+              >Años Totales de Maestría:</label
+            >
+            <input
+              type="number"
+              formControlName="añosMaestria"
+              class="w-full p-2 border rounded transition-transform duration-300 hover:scale-105"
+              min="0"
+            />
+          </div>
+        </div>
+  
+        <!-- Doctorado -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <div>
+            <label class="block font-semibold text-gray-700"
+              >Número de Doctorados:</label
+            >
+            <input
+              type="number"
+              formControlName="numDoctorados"
+              class="w-full p-2 border rounded transition-transform duration-300 hover:scale-105"
+              min="0"
+              max="2"
+            />
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700"
+              >Años Totales de Doctorado:</label
+            >
+            <input
+              type="number"
+              formControlName="añosDoctorado"
+              class="w-full p-2 border rounded transition-transform duration-300 hover:scale-105"
+              min="0"
+            />
+          </div>
+        </div>
+      </div>
+  
+      <!-- Categoría -->
+      <div>
+        <label class="block font-semibold text-gray-700"
+          >Categoría Escalafonaria:</label
+        >
+        <select formControlName="categoria" class="w-full p-2 border rounded transition-transform duration-300 hover:scale-105">
+          <option value="">Seleccione...</option>
+          <option value="Auxiliar">Auxiliar</option>
+          <option value="Asistente">Asistente</option>
+          <option value="Asociado">Asociado</option>
+          <option value="Titular">Titular</option>
+        </select>
+      </div>
+  
+      <div>
+        <label class="block font-semibold text-gray-700"
+          >Experiencia en Investigación (años):</label
+        >
+        <input
+          type="number"
+          formControlName="experienciaInvestigacion"
+          class="w-full p-2 border rounded transition-transform duration-300 hover:scale-105"
+          min="0"
+        />
+      </div>
+      <div>
+        <label class="block font-semibold text-gray-700"
+          >Experiencia Docente (años):</label
+        >
+        <input
+          type="number"
+          formControlName="experienciaDocente"
+          class="w-full p-2 border rounded transition-transform duration-300 hover:scale-105"
+          min="0"
+        />
+      </div>
+      <div>
+        <label class="block font-semibold text-gray-700"
+          >Experiencia en Dirección (años):</label
+        >
+        <input
+          type="number"
+          formControlName="experienciaDireccion"
+          class="w-full p-2 border rounded transition-transform duration-300 hover:scale-105"
+          min="0"
+        />
+      </div>
+      <div>
+        <label class="block font-semibold text-gray-700"
+          >Experiencia No Docente (años):</label
+        >
+        <input
+          type="number"
+          formControlName="experienciaNoDocente"
+          class="w-full p-2 border rounded transition-transform duration-300 hover:scale-105"
+          min="0"
+        />
+      </div>
+      <div class="mt-6 p-4 bg-gray-100 rounded-lg col-span-2 ">
+        <h2 class="text-lg font-bold text-gray-800">Productividad Académica</h2>
+        <div class="gap-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4" formArrayName="produccionAcademica">
+            <div *ngFor="let item of tiposProduccion; let i = index">
+              <label class="block font-semibold text-gray-700">{{ item.nombre }}:</label>
+              <input
+                type="number"
+                [formControlName]="i"
+                min="0"
+                class="w-full p-2 border rounded transition-transform duration-300 hover:scale-105"
+              />
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </form>
+  
+    <button
+      (click)="calcularSalario()"
+      class="mt-6 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition transition-transform duration-300 hover:scale-105"
+    >
+      Calcular Salario
+    </button>
+  
+    <div *ngIf="salarioTotal !== null" class="mt-6 text-center">
+      <h2 class="text-xl font-semibold text-gray-800">Salario Calculado:</h2>
+      <p class="text-2xl font-bold text-green-600">
+        {{ salarioTotal | currency : "COP" }}
+      </p>
+    </div>
+  
+    <div *ngIf="historicoSalarios.length > 0" class="mt-8">
+      <h3 class="text-lg font-semibold text-gray-800 text-center mb-4">
+        Historial de Simulaciones
+      </h3>
+      <ngx-charts-bar-vertical
+        [results]="historicoSalarios"
+        [scheme]="colorScheme"
+        [xAxis]="true"
+        [yAxis]="true"
+        [legend]="false"
+        [showDataLabel]="true"
+      ></ngx-charts-bar-vertical>
+    </div>
+  </div>
+  

@@ -1,0 +1,62 @@
+<div class="salary-container">
+  <div class="title-container">
+    <img src="https://4.bp.blogspot.com/-jikTD4s6ApE/Vq6ma_E7QcI/AAAAAAAAAIk/v6W0iBlBSx0/s1600/logo.png" alt="Logo" class="logo">
+    <h2>Simulador de Salario de Profesores Ocasionales en la UPC</h2>
+  </div>
+
+  <label>Categoría Docente:</label>
+  <select [(ngModel)]="categoriaSeleccionada">
+    <option>Auxiliar</option>
+    <option>Asistente</option>
+    <option>Asociado</option>
+    <option>Titular</option>
+  </select>
+
+  <label>Tiempo de Trabajo:</label>
+  <select [(ngModel)]="tiempoSeleccionado">
+    <option>Tiempo Completo</option>
+    <option>Medio Tiempo</option>
+  </select>
+
+  <label>Título Académico:</label>
+  <select [(ngModel)]="tituloSeleccionado">
+    <option>Especialización</option>
+    <option>Maestría</option>
+    <option>Doctorado</option>
+    <option>Postdoctorado</option>
+  </select>
+
+  <label>Productividad Académica:</label>
+  <select [(ngModel)]="investigacionSeleccionada">
+    <option>A1</option>
+    <option>A</option>
+    <option>B</option>
+    <option>C</option>
+    <option>Reconocido Minciencias</option>
+    <option>Semillero</option>
+  </select>
+
+  <button (click)="calcularSalario()">Calcular Salario</button>
+
+  <div *ngIf="salarioCalculado !== null" class="result">
+    <h3>Salario Final:</h3>
+    <p class="salary-value">{{ salarioCalculado | number:'1.3-3' }} SMMLV</p>
+
+    <h3>Salario en Pesos:</h3>
+    <p class="salary-value">{{ salarioCalculado * 1423500 | number:'1.1-1' }} COP</p>
+  </div>
+
+  <div *ngIf="historicoSalarios.length > 0" class="mt-8">
+    <h3 class="text-lg font-semibold text-gray-800 text-center mb-4">
+      Historial de Simulaciones
+    </h3>
+    <ngx-charts-bar-vertical
+      [results]="historicoSalarios"
+      [scheme]="colorScheme"
+      [xAxis]="true"
+      [yAxis]="true"
+      [legend]="false"
+      [showDataLabel]="true"
+    ></ngx-charts-bar-vertical>
+  </div>
+</div>
